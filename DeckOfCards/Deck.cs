@@ -62,7 +62,7 @@ namespace DeckOfCards
             return RemoveCard(rnd.Next(0, cards.Count));
         }
 
-        public Card StealInPosition(int position)
+        public Card StealAt(int position)
         {
             return RemoveCard(position);
         }
