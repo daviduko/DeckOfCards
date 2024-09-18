@@ -6,11 +6,8 @@ namespace DeckOfCards
     {
         static void Main(string[] args)
         {
-            Deck deck = new Deck();
-            Console.WriteLine(deck.ToString());
-            deck.Shuffle();
-            Console.WriteLine(deck.ToString());
-            Console.ReadKey();
-        }
+            var game = new Game();
+            game.Run();
+        } 
     }
 }

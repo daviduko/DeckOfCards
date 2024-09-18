@@ -51,18 +51,18 @@ namespace DeckOfCards
             }
         }
 
-        public Card Steal()
+        public Card Draw()
         {
             return RemoveCard(0);
         }
 
-        public Card RandomSteal()
+        public Card RandomDraw()
         {
             Random rnd = new Random();
             return RemoveCard(rnd.Next(0, cards.Count));
         }
 
-        public Card StealAt(int position)
+        public Card DrawAt(int position)
         {
             return RemoveCard(position);
         }

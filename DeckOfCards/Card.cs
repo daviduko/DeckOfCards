@@ -3,10 +3,10 @@ namespace DeckOfCards
 {
     enum eSuit
     {
-        Hearts,
         Clubs,
-        Diamond,
-        Spades
+        Cups,
+        Swords,
+        Golds
     }
     internal class Card
     {
