@@ -45,8 +45,8 @@ namespace DeckOfCards
                 Console.WriteLine("Press any key to show the cards");
                 Console.ReadKey();
 
-                Showdown();
-            } while (round <= cardsPerPlayer);
+                Showdown(playerList);
+            } while (round < cardsPerPlayer);
         }
 
         private void DealCards()
@@ -66,12 +66,16 @@ namespace DeckOfCards
             Console.WriteLine("Cards have been dealt");
         }
 
-        private void Showdown()
+        private void Showdown(List<Player> playersLeftList)
         {
-            Dictionary<Card, Player> cardPlayerDic = new Dictionary<Card, Player>();
+            Dictionary<Player, Card> cardPlayerDic = new Dictionary<Player, Card>();
 
-            foreach(Player player in playerList)
-                cardPlayerDic.Add(player.Deck.Draw(), player);
+            foreach (Player player in playersLeftList)
+            {
+                Card card = player.Deck.Draw();
+                cardPlayerDic.Add(player, card);
+                Console.WriteLine($"{player.Name}: {card}");
+            }
         }
 
         private void AskForNumberOfPlayers()
