@@ -14,6 +14,11 @@ namespace DeckOfCards
             CreateDeck();
         }
 
+        public Deck(List<Card> cards)
+        {
+            this.cards = new List<Card>(cards);
+        }
+
         private void CreateDeck()
         {
             cards = new List<Card>();
@@ -54,17 +59,6 @@ namespace DeckOfCards
         public Card Draw()
         {
             return RemoveCard(0);
-        }
-
-        public Card RandomDraw()
-        {
-            Random rnd = new Random();
-            return RemoveCard(rnd.Next(0, cards.Count));
-        }
-
-        public Card DrawAt(int position)
-        {
-            return RemoveCard(position);
         }
 
         private Card RemoveCard(int position)

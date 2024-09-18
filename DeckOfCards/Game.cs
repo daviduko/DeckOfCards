@@ -8,7 +8,7 @@ namespace DeckOfCards
 {
     internal class Game
     {
-        private int numberOfPlayers;
+        private int numberOfPlayers, cardsPerPlayer, round;
         private List<Player> playerList = new List<Player>();
         private Deck deck;
 
@@ -36,26 +36,50 @@ namespace DeckOfCards
             deck = new Deck();
             deck.Shuffle();
 
-            Draw();
+            DealCards();
+
+            round = 1;
+
+            do
+            {
+                Console.WriteLine("Press any key to show the cards");
+                Console.ReadKey();
+
+                Showdown();
+            } while (round <= cardsPerPlayer);
         }
 
-        private void Draw()
+        private void DealCards()
         {
-            Console.WriteLine();
-            foreach (Player player in playerList)
+            cardsPerPlayer = deck.GetNumberOfCards() / numberOfPlayers;
+            
+            foreach(Player player in playerList)
             {
-                player.Card = deck.Draw();
-                Console.WriteLine(player.ToString());
+                List<Card> cards = new List<Card>();
+
+                for(int i = 0; i < cardsPerPlayer; i++)
+                    cards.Add(deck.Draw());
+
+                player.Deck = new Deck(cards);
             }
-            Console.ReadLine();
+
+            Console.WriteLine("Cards have been dealt");
+        }
+
+        private void Showdown()
+        {
+            Dictionary<Card, Player> cardPlayerDic = new Dictionary<Card, Player>();
+
+            foreach(Player player in playerList)
+                cardPlayerDic.Add(player.Deck.Draw(), player);
         }
 
         private void AskForNumberOfPlayers()
         {
             do
             {
-                Console.WriteLine("Enter the number of players");
-            } while (!int.TryParse(Console.ReadLine(), out numberOfPlayers));
+                Console.WriteLine("Enter the number of players (between 2 and 5)");
+            } while (!int.TryParse(Console.ReadLine(), out numberOfPlayers) || numberOfPlayers < 2 || numberOfPlayers > 5);
         }
 
         private static void Header(string title, string subtitle = "", ConsoleColor foreGroundColor = ConsoleColor.White)

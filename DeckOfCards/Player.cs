@@ -9,7 +9,7 @@ namespace DeckOfCards
     internal class Player
     {
         public string Name {  get; set; }
-        public Card Card { get; set; }
+        public Deck Deck { get; set; }
 
         public Player(string name)
         {
@@ -18,7 +18,7 @@ namespace DeckOfCards
 
         public override string ToString()
         {
-            return $"{Name}: {Card.ToString()}";
+            return base.ToString();
         }
     }
 }
