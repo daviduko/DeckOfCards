@@ -46,6 +46,7 @@ namespace DeckOfCards
                 Console.ReadKey();
 
                 Showdown(playerList);
+                round++;
             } while (round < cardsPerPlayer);
         }
 
@@ -66,16 +67,39 @@ namespace DeckOfCards
             Console.WriteLine("Cards have been dealt");
         }
 
-        private void Showdown(List<Player> playersLeftList)
+        private void Showdown(List<Player> playersToPlay)
         {
             Dictionary<Player, Card> cardPlayerDic = new Dictionary<Player, Card>();
 
-            foreach (Player player in playersLeftList)
+            foreach (Player player in playersToPlay)
             {
                 Card card = player.Deck.Draw();
                 cardPlayerDic.Add(player, card);
                 Console.WriteLine($"{player.Name}: {card}");
             }
+
+            Console.WriteLine("-------------");
+            CheckWinner(cardPlayerDic);
+        }
+
+        private void CheckWinner(Dictionary<Player, Card> cardPlayerDic)
+        {
+            int maxValue = 1;
+            List<Player> winners = new List<Player>();
+
+            Dictionary<Player, Card> orderedcardPlayerDic = cardPlayerDic
+                .OrderByDescending(kvp => kvp.Value.Number)
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            foreach (KeyValuePair<Player, Card> kvp in orderedcardPlayerDic)
+            {
+                if(winners.Count > 0)
+                {
+                    )
+                }
+            }
+            
+
         }
 
         private void AskForNumberOfPlayers()
