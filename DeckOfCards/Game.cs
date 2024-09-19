@@ -54,10 +54,11 @@ namespace DeckOfCards
 
             do
             {
-                Console.WriteLine("Press any key to show the cards\n");
+                Console.WriteLine("\nPress any key to show the cards\n");
                 Console.ReadKey();
 
                 Showdown(playerList);
+                CheckAndShowPlayersCards();
 
             } while (playerList.Count > 1);
 
@@ -121,7 +122,7 @@ namespace DeckOfCards
                 CheckWinner(cardPlayerDic, totalCards);
             }
             else
-                CheckWinner(cardPlayerDic, cardPlayerDic.Values.ToList());            
+                CheckWinner(cardPlayerDic, cardPlayerDic.Values.ToList());
         }
 
         private void CheckWinner(Dictionary<Player, Card> cardPlayerDic, List<Card> cardsInGame)
@@ -156,18 +157,24 @@ namespace DeckOfCards
                 Player winner = winners[0];
                 winner.Deck.AddCards(cardsInGame);
                 Console.WriteLine($"{winner} won this round\n");
-            }           
+            }
         }
 
         private void CheckAndShowPlayersCards()
         {
+            List<Player> playersToRemove = new List<Player>();
+
+            Console.WriteLine("Cards:");
+
             foreach (Player player in playerList)
             {
                 int numberOfCards = player.Deck.GetNumberOfCards();
-                Console.WriteLine($"{player}: {numberOfCards} cards");
+                Console.WriteLine($" {player}: {numberOfCards} cards");
                 if(numberOfCards == 0)
-                    playerList.Remove(player);
+                    playersToRemove.Add(player);
             }
+
+            playerList = playerList.Except(playersToRemove).ToList();
         }
 
         private void AskForNumberOfPlayers()
