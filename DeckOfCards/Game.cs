@@ -22,6 +22,15 @@ namespace DeckOfCards
             } while (Play());
         }
 
+        /// <summary>
+        ///╔=====================================================================================================╗
+        ///║                                              Title                                                  ║
+        ///║                                             Subtitle                                                ║
+        ///╚=====================================================================================================╝
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="subtitle"></param>
+        /// <param name="foreGroundColor"></param>
         private static void Header(string title, string subtitle = "", ConsoleColor foreGroundColor = ConsoleColor.White)
         {
             int windowWidthSize = Console.WindowWidth;
@@ -48,6 +57,10 @@ namespace DeckOfCards
             return String.Format(decorationString + "{0," + ((windowWidth / 2) + (content.Length / 2)) + "}{1," + (windowWidth - (windowWidth / 2) - (content.Length / 2) + decorationString.Length) + "}", content, decorationString);
         }
 
+        /// <summary>
+        /// Method that sets up the game and loops every round 
+        /// </summary>
+        /// <returns>Boolean to play again</returns>
         private bool Play()
         {
             InitGame();
@@ -69,6 +82,9 @@ namespace DeckOfCards
             return AskToContinue("Do you want to play again?");
         }
 
+        /// <summary>
+        /// Creates players list and the deck, then deals cards to the players
+        /// </summary>
         private void InitGame()
         {
             AskForNumberOfPlayers();
@@ -85,6 +101,9 @@ namespace DeckOfCards
             DealCards();
         }
 
+        /// <summary>
+        /// Creates a deck for each player and adds the cards to it
+        /// </summary>
         private void DealCards()
         {
             cardsPerPlayer = deck.GetNumberOfCards() / numberOfPlayers;
@@ -102,6 +121,12 @@ namespace DeckOfCards
             Console.WriteLine("Cards have been dealt");
         }
 
+        /// <summary>
+        /// Draws the cards of each player that plays that round
+        /// </summary>
+        /// <param name="playersToPlay">List of players of the round, in case there's a tie, there's and exgtra round for the players 
+        /// that won the round with the same card number</param>
+        /// <param name="cardsAdded">Cards that the winner will add to his deck</param>
         private void Showdown(List<Player> playersToPlay, List<Card> cardsAdded = null)
         {
             Dictionary<Player, Card> cardPlayerDic = new Dictionary<Player, Card>();
@@ -125,6 +150,11 @@ namespace DeckOfCards
                 CheckWinner(cardPlayerDic, cardPlayerDic.Values.ToList());
         }
 
+        /// <summary>
+        /// Checks the winner, if there's more than one, calls ShowDown() again
+        /// </summary>
+        /// <param name="cardPlayerDic">Dictionary with the player and card</param>
+        /// <param name="cardsInGame">cards that will be added to the winners deck</param>
         private void CheckWinner(Dictionary<Player, Card> cardPlayerDic, List<Card> cardsInGame)
         {
             int maxValue = 1;
@@ -160,6 +190,9 @@ namespace DeckOfCards
             }
         }
 
+        /// <summary>
+        /// Shows at console players cards and checks if a player has no cards and must be removed from playerList
+        /// </summary>
         private void CheckAndShowPlayersCards()
         {
             List<Player> playersToRemove = new List<Player>();
@@ -177,6 +210,9 @@ namespace DeckOfCards
             playerList = playerList.Except(playersToRemove).ToList();
         }
 
+        /// <summary>
+        /// Asks for number of players making sure its not above 5 or under 2
+        /// </summary>
         private void AskForNumberOfPlayers()
         {
             do
@@ -185,6 +221,11 @@ namespace DeckOfCards
             } while (!int.TryParse(Console.ReadLine(), out numberOfPlayers) || numberOfPlayers < 2 || numberOfPlayers > 5);
         }
 
+        /// <summary>
+        /// Asks if you want to continue regarding the question
+        /// </summary>
+        /// <param name="question">Question that is made</param>
+        /// <returns>Boolean: true => yes, false => no</returns>
         private bool AskToContinue(string question)
         {
             string answer;
