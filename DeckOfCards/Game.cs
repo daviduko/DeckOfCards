@@ -113,7 +113,7 @@ namespace DeckOfCards
                 List<Card> cards = new List<Card>();
 
                 for(int i = 0; i < cardsPerPlayer; i++)
-                    cards.Add(deck.Draw());
+                    cards.Add(deck.DrawCard());
 
                 player.Deck = new Deck(cards);
             }
@@ -133,7 +133,7 @@ namespace DeckOfCards
 
             foreach (Player player in playersToPlay)
             {
-                Card card = player.Deck.Draw();
+                Card card = player.Deck.DrawCard();
                 cardPlayerDic.Add(player, card);
                 Console.WriteLine($"{player.Name}: {card}");
             }

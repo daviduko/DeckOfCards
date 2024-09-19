@@ -55,7 +55,7 @@ namespace DeckOfCards
             }
         }
 
-        public Card Draw()
+        public Card DrawCard()
         {
             return RemoveCard(0);
         }
