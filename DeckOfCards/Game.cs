@@ -30,6 +30,8 @@ namespace DeckOfCards
         {
             AskForNumberOfPlayers();
 
+            playerList.Clear();
+
             //Add players
             for(int i = 1; i <= numberOfPlayers; i++)
                 playerList.Add(new Player($"Player{i}"));
