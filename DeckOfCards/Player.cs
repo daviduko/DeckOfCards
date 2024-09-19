@@ -16,6 +16,16 @@ namespace DeckOfCards
             Name = name;
         }
 
+        public Card Draw()
+        {
+            return Deck.DrawCard();
+        }
+
+        public void AddCards(List<Card> cards)
+        {
+            Deck.AddCards(cards);
+        }
+
         public override string ToString()
         {
             return Name;

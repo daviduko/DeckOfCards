@@ -133,7 +133,7 @@ namespace DeckOfCards
 
             foreach (Player player in playersToPlay)
             {
-                Card card = player.Deck.DrawCard();
+                Card card = player.Draw();
                 cardPlayerDic.Add(player, card);
                 Console.WriteLine($"{player.Name}: {card}");
             }
@@ -185,7 +185,7 @@ namespace DeckOfCards
             else
             {
                 Player winner = winners[0];
-                winner.Deck.AddCards(cardsInGame);
+                winner.AddCards(cardsInGame);
                 Console.WriteLine($"{winner} won this round\n");
             }
         }
