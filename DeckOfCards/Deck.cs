@@ -23,12 +23,11 @@ namespace DeckOfCards
         {
             cards = new List<Card>();
 
-            for (int i = 0; i < Enum.GetNames(typeof(eSuit)).Length; i++)
+            foreach(eSuit suit in Enum.GetValues(typeof(eSuit)))
             {
-                eSuit suit = (eSuit)i;
-                for (int n = 1; n <= numberOfCardsPerSuit; n++)
+                for(int i = 1; i <= numberOfCardsPerSuit; i++)
                 {
-                    cards.Add(new Card(n, suit));
+                    cards.Add(new Card(i, suit));
                 }
             }
         }
