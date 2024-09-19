@@ -9,39 +9,48 @@ namespace DeckOfCards
 {
     internal class Game
     {
-        private int numberOfPlayers, cardsPerPlayer, round;
+        private int numberOfPlayers, cardsPerPlayer;
         private List<Player> playerList = new List<Player>();
         private Deck deck;
 
-        private bool isGameRunning = true;
-
         public void Run()
         {
-            while (isGameRunning)
+            do
             {
                 Console.Clear();
                 Header("Card Battle", "", ConsoleColor.Red);
-                Console.WriteLine();
-                Play();
-            }
+            } while (Play());
         }
 
-        private void Play()
+        private static void Header(string title, string subtitle = "", ConsoleColor foreGroundColor = ConsoleColor.White)
         {
-            AskForNumberOfPlayers();
+            int windowWidthSize = Console.WindowWidth;
+            Console.Title = title + (subtitle != "" ? " - " + subtitle : "");
+            string titleContent = CenterText(title, "║", windowWidthSize);
+            string subtitleContent = CenterText(subtitle, "║", windowWidthSize);
+            string borderLine = new String('═', windowWidthSize - 2);
 
-            playerList.Clear();
+            Console.ForegroundColor = foreGroundColor;
+            Console.WriteLine($"╔{borderLine}╗");
+            Console.WriteLine(titleContent);
+            if (!string.IsNullOrEmpty(subtitle))
+            {
+                Console.WriteLine(subtitleContent);
+            }
+            Console.WriteLine($"╚{borderLine}╝");
+            Console.ResetColor();
+            Console.WriteLine();
+        }
 
-            //Add players
-            for(int i = 1; i <= numberOfPlayers; i++)
-                playerList.Add(new Player($"Player{i}"));
+        private static string CenterText(string content, string decorationString = "", int windowWidthSize = 90)
+        {
+            int windowWidth = windowWidthSize - (2 * decorationString.Length);
+            return String.Format(decorationString + "{0," + ((windowWidth / 2) + (content.Length / 2)) + "}{1," + (windowWidth - (windowWidth / 2) - (content.Length / 2) + decorationString.Length) + "}", content, decorationString);
+        }
 
-            deck = new Deck();
-            deck.Shuffle();
-
-            DealCards();
-
-            round = 1;
+        private bool Play()
+        {
+            InitGame();
 
             do
             {
@@ -49,20 +58,30 @@ namespace DeckOfCards
                 Console.ReadKey();
 
                 Showdown(playerList);
-                round++;
-            } while (round < cardsPerPlayer);
+
+            } while (playerList.Count > 1);
 
             Player winner = playerList.First();
 
-            foreach (Player player in playerList)
-            {
-                if(player.Deck.GetNumberOfCards() > winner.Deck.GetNumberOfCards())
-                    winner = player;
-            }
-
             Console.WriteLine($"{winner} WON THE GAME!!!");
 
-            isGameRunning = AskToContinue("Do you want to play again?");
+            return AskToContinue("Do you want to play again?");
+        }
+
+        private void InitGame()
+        {
+            AskForNumberOfPlayers();
+
+            playerList.Clear();
+
+            //Add players
+            for (int i = 1; i <= numberOfPlayers; i++)
+                playerList.Add(new Player($"Player{i}"));
+
+            deck = new Deck();
+            deck.Shuffle();
+
+            DealCards();
         }
 
         private void DealCards()
@@ -131,17 +150,13 @@ namespace DeckOfCards
             }
             
             if(winners.Count > 1)
-            {
-                Showdown(winners);
-                round++;
-            }
+                Showdown(winners, cardsInGame);
             else
             {
                 Player winner = winners[0];
                 winner.Deck.AddCards(cardsInGame);
                 Console.WriteLine($"{winner} won this round\n");
-            }
-            
+            }           
         }
 
         private void CheckAndShowPlayersCards()
@@ -178,30 +193,6 @@ namespace DeckOfCards
 
             return keep;
         }
-
-        private static void Header(string title, string subtitle = "", ConsoleColor foreGroundColor = ConsoleColor.White)
-        {
-            int windowWidthSize = Console.WindowWidth;
-            Console.Title = title + (subtitle != "" ? " - " + subtitle : "");
-            string titleContent = CenterText(title, "║", windowWidthSize);
-            string subtitleContent = CenterText(subtitle, "║", windowWidthSize);
-            string borderLine = new String('═', windowWidthSize - 2);
-
-            Console.ForegroundColor = foreGroundColor;
-            Console.WriteLine($"╔{borderLine}╗");
-            Console.WriteLine(titleContent);
-            if (!string.IsNullOrEmpty(subtitle))
-            {
-                Console.WriteLine(subtitleContent);
-            }
-            Console.WriteLine($"╚{borderLine}╝");
-            Console.ResetColor();
-        }
-
-        private static string CenterText(string content, string decorationString = "", int windowWidthSize = 90)
-        {
-            int windowWidth = windowWidthSize - (2 * decorationString.Length);
-            return String.Format(decorationString + "{0," + ((windowWidth / 2) + (content.Length / 2)) + "}{1," + (windowWidth - (windowWidth / 2) - (content.Length / 2) + decorationString.Length) + "}", content, decorationString);
-        }
+        
     }
 }
