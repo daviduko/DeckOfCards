@@ -61,6 +61,11 @@ namespace DeckOfCards
             return RemoveCard(0);
         }
 
+        public void AddCards(List<Card> cards)
+        {
+            this.cards.AddRange(cards);
+        }
+
         private Card RemoveCard(int position)
         {
             Card card = cards.ElementAt(position);

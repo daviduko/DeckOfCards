@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,12 +43,24 @@ namespace DeckOfCards
 
             do
             {
-                Console.WriteLine("Press any key to show the cards");
+                Console.WriteLine("Press any key to show the cards\n");
                 Console.ReadKey();
 
                 Showdown(playerList);
                 round++;
             } while (round < cardsPerPlayer);
+
+            Player winner = playerList.First();
+
+            foreach (Player player in playerList)
+            {
+                if(player.Deck.GetNumberOfCards() > winner.Deck.GetNumberOfCards())
+                    winner = player;
+            }
+
+            Console.WriteLine($"{winner} WON THE GAME!!!");
+
+            isGameRunning = AskToContinue("Do you want to play again?");
         }
 
         private void DealCards()
@@ -67,7 +80,7 @@ namespace DeckOfCards
             Console.WriteLine("Cards have been dealt");
         }
 
-        private void Showdown(List<Player> playersToPlay)
+        private void Showdown(List<Player> playersToPlay, List<Card> cardsAdded = null)
         {
             Dictionary<Player, Card> cardPlayerDic = new Dictionary<Player, Card>();
 
@@ -79,27 +92,65 @@ namespace DeckOfCards
             }
 
             Console.WriteLine("-------------");
-            CheckWinner(cardPlayerDic);
+
+            if(cardsAdded != null)
+            {
+                List<Card> totalCards = cardPlayerDic.Values.ToList();
+                totalCards.AddRange(cardsAdded);
+                CheckWinner(cardPlayerDic, totalCards);
+            }
+            else
+                CheckWinner(cardPlayerDic, cardPlayerDic.Values.ToList());            
         }
 
-        private void CheckWinner(Dictionary<Player, Card> cardPlayerDic)
+        private void CheckWinner(Dictionary<Player, Card> cardPlayerDic, List<Card> cardsInGame)
         {
             int maxValue = 1;
             List<Player> winners = new List<Player>();
 
-            Dictionary<Player, Card> orderedcardPlayerDic = cardPlayerDic
-                .OrderByDescending(kvp => kvp.Value.Number)
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-            foreach (KeyValuePair<Player, Card> kvp in orderedcardPlayerDic)
+            foreach (KeyValuePair<Player, Card> kvp in cardPlayerDic)
             {
-                if(winners.Count > 0)
+                if(winners.Count == 0)
                 {
-                    )
+                    maxValue = kvp.Value.Number;
+                    winners.Add(kvp.Key);
+                }
+                else
+                {
+                    if(kvp.Value.Number > maxValue)
+                    {
+                        maxValue = kvp.Value.Number;
+                        winners.Clear();
+                        winners.Add(kvp.Key);
+                    }
+                    else if(kvp.Value.Number == maxValue) 
+                        winners.Add(kvp.Key);
                 }
             }
             
+            if(winners.Count > 1)
+            {
+                Showdown(winners);
+                round++;
+            }
+            else
+            {
+                Player winner = winners[0];
+                winner.Deck.AddCards(cardsInGame);
+                Console.WriteLine($"{winner} won this round\n");
+            }
+            
+        }
 
+        private void CheckAndShowPlayersCards()
+        {
+            foreach (Player player in playerList)
+            {
+                int numberOfCards = player.Deck.GetNumberOfCards();
+                Console.WriteLine($"{player}: {numberOfCards} cards");
+                if(numberOfCards == 0)
+                    playerList.Remove(player);
+            }
         }
 
         private void AskForNumberOfPlayers()
@@ -108,6 +159,22 @@ namespace DeckOfCards
             {
                 Console.WriteLine("Enter the number of players (between 2 and 5)");
             } while (!int.TryParse(Console.ReadLine(), out numberOfPlayers) || numberOfPlayers < 2 || numberOfPlayers > 5);
+        }
+
+        private bool AskToContinue(string question)
+        {
+            string answer;
+            bool keep = true;
+            do
+            {
+                Console.WriteLine($"{question} (y/n)");
+                answer = Console.ReadLine();
+            } while (answer != "y" && answer != "n");
+
+            if (answer == "n")
+                keep = false;
+
+            return keep;
         }
 
         private static void Header(string title, string subtitle = "", ConsoleColor foreGroundColor = ConsoleColor.White)
